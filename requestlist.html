@@ -1,0 +1,328 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>Request list</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="./dataTables/css/dataTables.bootstrap4.css" rel="stylesheet">
+	<link href="./dataTables/css/select.bootstrap4.css" rel="stylesheet">
+	<link href="./dataTables/css/buttons.bootstrap4.min.css" rel="stylesheet">
+	<link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+	<link href="./css/Common.css" rel="stylesheet">
+	
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+	<script type="text/javascript" src="./js/frame.js"></script>
+	<script type="text/javascript" src="./js/requestlist.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	<script src="//cdn.quilljs.com/1.3.6/quill.min.js"></script>
+	
+	<script type="text/javascript" src="./dataTables/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" src="./dataTables/js/dataTables.bootstrap4.js"></script>
+	
+	<script type="text/javascript" src="./dataTables/js/dataTables.buttons.min.js"></script>
+	<script type="text/javascript" src="./dataTables/js/buttons.bootstrap4.min.js"></script>
+	<script type="text/javascript" src="./dataTables/js/buttons.colVis.min.js"></script>
+	<script type="text/javascript" src="./dataTables/js/dataTables.select.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+</head>
+<body>
+<div class='container-fluid h-100 m-0 p-0'>
+<div id='contentDiv' class='row h-100 m-0'>
+<div class='col-2 ml-0 p-0 h-100 align-items-start'>
+<nav id='menu' class="navbar navbar-light h-100 p-0 align-items-start">
+<ul class='navbar-nav flex-column nav-pills accordion w-100 m-0' id="accordionSidebar">
+</ul>
+</nav>
+</div>
+<script>
+loadNav($('#accordionSidebar'), "requestList");
+</script>
+	<div class='col-10'>
+		<div>
+		<form id='form1' role='form'>
+			<table id='requestList' class='table m-4'>
+			<thead>
+    		<tr>
+    			<th></th>
+    			<th></th>
+        		<th>Authority</th>
+        		<th>detail</th>
+        		<th>first name</th>
+        		<th>last name</th>
+        		<th>PAWSID</th>
+        		<th>email</th>
+        		<th>date</th>
+        		<th>status</th>
+        		<th>action</th>
+        		<th>requester</th>
+    		</tr>
+    		</thead>
+			</table>
+		</form>
+		<!-- Modal -->
+		<div class='modal fade' id='emailEditor' tabindex='-1' role='dialog'>
+  			<div class='modal-dialog mw-100 w-75' role='document'>
+    			<div class='modal-content'>
+      			<div class='modal-header'>
+        			<h5 class='modal-title' id='emailEditorTitle'>Send email</h5>
+       				<button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+          				<span aria-hidden="true">&times;</span>
+        			</button>
+      			</div>
+      			<div class='modal-body'>
+      				<form id='formEmailEditor'>
+      					<div class='form-group'>
+    						<label>To:</label>
+    						<input type='text' class='form-control' name='sendto'>
+  						</div>
+  						<div class='form-group'>
+    						<label>Subject:</label>
+    						<input type='text' class='form-control' name='subject'>
+  						</div>
+  						<div class='form-group'>
+    						<label>Attachments:</label>
+    						<!-- <input type='text' class='form-control' name='attachment'>-->
+							<div class='input-group w-75'>
+  								<div class='custom-file'>
+    								<input type='file' class='custom-file-input' id='inputGroupFile' name='uploadAttachemnt' multiple>
+    								<label class='custom-file-label' for='inputGroupFile'>Choose file</label>
+  								</div>
+  								<div class='input-group-append'>
+    								<a class='btn btn-outline-secondary' href='#' id='uploadFile'>upload</a>
+  								</div>
+							</div>
+							<div id='divResourceList'></div>
+  							</div>
+  						<div class='form-group'>
+    						<label>Message:</label>
+    						<div id='quillEditor' stlye='min-height:10em;'></div>
+  						</div>
+      				</form>
+      			</div>
+      			<div class='modal-footer'>
+        			<button id='btncancelEmail' type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
+        			<button id='btnSendEmail' type='button' class='btn btn-primary'>Send</button>
+      			</div>
+    			</div>
+  			</div>
+		</div>
+		</div>
+	</div>
+	</div>
+</div>
+		
+	<script>
+		$(document).ready(function(){
+			var toolbarOptions = [
+				[{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+				['bold', 'italic', 'underline'],
+			    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+			    [{ 'color': [] }, { 'background': [] }],
+			    ['clean']
+			];
+			var editor;
+			var options = {
+				modules: {
+					toolbar: toolbarOptions
+				},
+				theme: 'snow'
+			};
+			editor = new Quill('#quillEditor', options);
+			/*ClassicEditor
+		    .create( document.querySelector( '#area1' ), {
+		        toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'imageUpload' ]
+		    } )
+		    .then( newEditor => {
+        		editor = newEditor;
+    		} )
+		    .catch( error => { 
+		        console.log( error );
+		    } );*/
+			var approved = 3;
+			
+			var table = $('#requestList').DataTable( {
+				processing: true,
+				serverSide: true,     
+        		ajax: {
+                    url: "LoadRequestListServlet",
+                    type: "POST",
+                    data: function(d){
+                        d.approved = approved;
+                    },
+                    dataSrc: function ( json ) {
+                        var undone = json.undone;
+                        if(undone == 0){
+                        	$('#menuRequest span.badge').remove();
+                        }
+                        else{
+                        	var badge = $('#menuRequest span.badge');
+                        	if(badge.length>0){
+                        		badge.text(undone);
+                        	}
+                        	else{
+                        		$('#menuRequest a').prepend($("<span class='badge badge-pill badge-primary float-right'>" + undone + "</span>"));
+                        	}
+                        }
+                        return json.data;
+                     }
+                },
+        		columns: [
+        		          { data: 'checkbox'},
+						  { data: 'id' },
+        		          { data: 'authorityName' },
+        		          { data: 'info' },
+        		          { data: 'firstName' },
+        		          { data: 'lastName' },
+        		          { data: 'whom' },
+        		          { data: 'email' },
+        		          { data: 'date' },
+        		          { data: 'status' },
+        		          { data: 'idUserAction'},
+        		          { data: 'requester'}
+        		      ],
+        		 columnDefs: [ 
+						  { targets: [ 0 ],
+    						data: null,
+    						defaultContent: '',
+    						orderable: false,
+    						className: 'select-checkbox'},
+        		          { targets: [ 1 ],
+        		        	visible: false,
+        		        	name: "Request.idRequest"},
+        		          { targets: [ 2 ],
+        		        	name: "Authority.AuthorityName"},
+        		          { targets: [ 3 ],
+            		        name: "Request.extrainfo"},
+            		      { targets: [ 4 ],
+                		    name: "Request.firstname"},
+                		  { targets: [ 5 ],
+                		    name: "Request.lastname"},
+                		  { targets: [ 6 ],
+                    		name: "Request.ForWhom"},
+                    	  { targets: [ 7 ],
+                        	name: "Request.email"},
+                          { targets: [ 8 ],
+                		    name: "Request.Time"},
+                		  { targets: [ 9 ],
+                		    name: "Request.Approved",
+                		    orderable: false },
+                		  { targets: [ 10 ],
+                    		name: "Authority.idUserAction",
+                    		visible: false },
+                    	  { targets: [ 11 ],
+                        	name: "Authority.idUserAction",
+                        	visible: false }
+        		      ],
+        		 order: [[ 8, "desc" ]],
+        		 select: true,
+        		 lengthMenu: [
+        		              [ 5, 10, 20, -1],
+        		              [ '5 rows', '10 rows', '20 rows', 'Show all' ]
+        		          ],
+        		 buttons: [
+                		  {
+                			  extend: 'excelHtml5',
+                			  title: 'requests_list',
+                			  className: "btn-outline-secondary btn-sm"
+            			  },
+                		  {
+                		      extend: 'colvis',
+                		      className: "btn-outline-secondary btn-sm"
+                		  }
+                		  ],
+        		  initComplete: function(settings, json) {
+        			  var api = this.api();
+        			  //console.log( api.buttons().container()[0].nodeName );
+        			  api.buttons().container().appendTo( '#requestList_wrapper .col-md-6:eq(0)' );
+        			  new $.fn.dataTable.Buttons( api, {
+        	                buttons: [
+        	                    {
+        	                        text: '<span class="fa fa-check fa-lg"></span>Approve',
+        	                        className: "btn-outline-dark btn-sm",
+        	                        action: function ( e, dt, node, conf ) {
+        	                        	var rowData = table.rows( { selected: true } ).data().toArray();
+                    		    	 	if(rowData.length == 0)alert("empty selection");
+                    		    	 	else{
+                    		    	 		var checkedlist = "";
+                  							$.each(rowData,function(i,n){
+                  								if (n.status != "Approve"){ 
+                  									checkedlist += n.id + ",";
+                  								}
+                  							});
+                  							onApprove(checkedlist, editor);
+                  							$('#requestList').DataTable().ajax.reload(null, true).draw();
+                    		    	 	}
+        	                        }
+        	                    },
+        	                    {
+        	                        text: '<span class="fa fa-close fa-lg"></span>Reject',
+        	                        className: "btn-outline-dark btn-sm",
+        	                        action: function ( e, dt, node, conf ) {
+        	                        	var rowData = table.rows( { selected: true } ).data().toArray();
+                    		    	 	if(rowData.length == 0)alert("empty selection");
+                    		    	 	else{
+                    		    	 		var checkedlist = "";
+                  							$.each(rowData,function(i,n){
+                  								if (n.status != "Rejected"){
+                  									checkedlist += n.id + ",";
+                  								}
+                  								
+                  							});
+                  							onReject(checkedlist);
+                  							$('#requestList').DataTable().ajax.reload(null, true).draw();
+                    		    	 	}
+        	                        }
+        	                    }
+        	                ]
+        	            } );
+        			  api.buttons(1, null).container().appendTo( api.table().container() );
+        			  $('button').removeClass("btn-secondary");
+        	          var statusS = $("<select id='statusSelector' name='status' class ='form-control form-control-sm col-sm-3 float-right'>"
+        	      			+ "<option value='3'>all</option>"
+        	    			+ "<option value='0'>pending</option>"
+        	    			+ "<option value='1'>approved</option>"
+        	    			+ "<option value='2'>rejected</option>"
+        	    			+ "</select>")
+        	    			.on( 'change', function () {
+        	    				approved = $('#statusSelector').val();
+        	    				//alert(approved);
+        	    	        	$('#requestList').DataTable().ajax.reload(null, true).draw();
+        	    			});
+        	          statusS.appendTo('#requestList_wrapper .col-md-6:eq(1)')
+        		  }
+            });
+			$('#btnSendEmail').click(function(){
+				sendApproveEmail(editor);
+			});
+			$('#emailEditor').on('hide.bs.modal',function(e){ 
+				onEmailEditorHide(editor); 
+			});
+			$('#emailEditor').on('click','a[name="deleteResource"]',function(){
+				var div = $(this).closest('div');
+				div.remove();
+			});
+			$('#emailEditor #uploadFile').click(function(){
+				//alert($('#formAuthority')[0]);
+				var f1 = $('#formEmailEditor');
+				uploadResourceFile(f1);
+			});
+		});
+		$('.custom-file-input').on('change',function(){
+			var files = $('#inputGroupFile').prop("files");
+			
+			var names = $.map(files,function(val){ 
+				return val.name; 
+			});
+			var fileNames = "";
+			for(var i = 0; i < names.length; i++){
+				fileNames += names[i].split('\\').pop() + ";  ";
+			}
+			$(this).next('.custom-file-label').addClass("selected").html(fileNames); 
+		});
+		
+	</script>
+</body>
+</html>

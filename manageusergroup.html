@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>User Group</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="./dataTables/css/dataTables.bootstrap4.css" rel="stylesheet">
+	<link href="./dataTables/css/select.bootstrap4.css" rel="stylesheet">
+	<link href="./dataTables/css/buttons.bootstrap4.min.css" rel="stylesheet">
+	<link href="./css/Common.css" rel="stylesheet">
+	
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery.session@1.0.0/jquery.session.min.js"></script>
+	<script type="text/javascript" src="./js/frame.js"></script>
+	<script type="text/javascript" src="./js/managegroup.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	<script src="https://cdn.ckeditor.com/ckeditor5/12.3.0/classic/ckeditor.js"></script>
+
+	<script type="text/javascript" src="./dataTables/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" src="./dataTables/js/dataTables.bootstrap4.js"></script>
+	
+	<script type="text/javascript" src="./dataTables/js/dataTables.buttons.min.js"></script>
+	<script type="text/javascript" src="./dataTables/js/buttons.bootstrap4.min.js"></script>
+	<script type="text/javascript" src="./dataTables/js/buttons.colVis.min.js"></script>
+	<script type="text/javascript" src="./dataTables/js/dataTables.select.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+</head>
+<body>
+<div class='container-fluid h-100 m-0 p-0'>
+	<div id='contentDiv' class='row h-100'>
+	<div class='col-2 ml-0 p-0 h-100 align-items-start'>
+	<nav id='menu' class="navbar navbar-light h-100 p-0 align-items-start">
+	<ul class='navbar-nav flex-column nav-pills accordion w-100 m-0' id="accordionSidebar">
+	</ul>
+	</nav>
+	</div>
+	<script>
+	loadNav($('#accordionSidebar'), "ManageUserGroup");
+	</script>
+		<div class='col-10'>
+		<form id='formUserGroup' role='form'>
+			<table id='userGroupList' class="table m-4">
+			<thead>
+    			<tr>
+    			<th></th>
+    			<th></th>
+    			<th></th>
+    			<th></th>
+        		<th>User Group</th>
+        		<th>Authority</th>
+        		<th></th>
+    			</tr>
+    		</thead>
+    		<tbody id='loadtb'>
+    		</tbody>
+			</table>
+		</form>
+		<div class='modal fade' id='editUserLevel' tabindex='-1' role='dialog'>
+  		<div class='modal-dialog w-75' role='document'>
+    		<div class='modal-content'>
+      		<div class='modal-header'>
+        		<h5 class='modal-title' id='exampleModalLabel'>User Level Edit:</h5>
+       			<button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+          			<span aria-hidden='true'>&times;</span>
+        		</button>
+      		</div>
+      		<div class='modal-body'>
+      		<form id='formUserLevel'>
+      			<div>
+      			<label>User Level:
+      				<input type='text' name='idUserLevel' class='form-control' style='display:none'>
+      				<input type='text' id='levelName' class='form-control' style='display:none'>
+      				<input type='text' name='levelName' class='form-control'>
+        		</label>
+        		</div>
+        		<div>
+        		<p class='mt-4 mb-0 font-weight-bold'>Add new user group:</p>
+        		<label>User group name:
+        			<input type='text' name='groupName' class='form-control' placeholder='User Group Name'>
+        		</label>
+        		</div>
+        	</form>
+      		</div>
+      		<div class='modal-footer'>
+        		<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        		<button id="btnEditUserLevel" type="button" class="btn btn-primary">Edit</button>
+      		</div>
+    		</div>
+  		</div>
+		</div>
+		<div class="modal fade" id="editUserGroup" tabindex="-1" role="dialog">
+  		<div class="modal-dialog w-75" role="document">
+    		<div class="modal-content">
+      		<div class="modal-header">
+        		<h5 class="modal-title" id="exampleModalLabel">User Group Edit:</h5>
+       			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          			<span aria-hidden="true">&times;</span>
+        		</button>
+      		</div>
+      		<div class='modal-body'>
+      			<form id='formUserGroup'>	
+      			<div>
+      			<label>User Group:
+      				<input type='text' name='idUserGroup' class='form-control' style='display:none'>
+      				<input type='text' name='groupName' class='form-control'>
+      				<input type='text' id='groupName' class='form-control' style='display:none'>
+        		</label>
+        		</div>
+        		<div id="modalAuthorityList" class='pl-2 mt-1'></div>
+        		<div>
+        		<p class='mt-4 mb-0 font-weight-bold'>Add new Authority:</p>
+        		<div class='row'>
+        			<div id='modalAuthoritySelect' class='pl-2'></div>
+        			<a id='btnAddAuthority' class='btn btn-outline-dark btn-sm ml-2' href='#'>Add</a>
+        		</div>
+        		<div id="modalNewAuthorityList"></div>
+        		</div>
+        		</form>
+      		</div>
+      		<div class='modal-footer'>
+        		<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
+        		<button id='btnDeleteUserGroup' type='button' class='btn btn-warning'>Delete this Group</button>
+        		<button id='btnEditUserGroup' type='button' class='btn btn-primary'>Edit</button>
+      		</div>
+    		</div>
+  		</div>
+		</div>
+		</div>
+	</div>
+</div>
+<script>
+$(document).ready(function(){
+	var authoritySelector = "";
+	var table;
+    table = $('#userGroupList').DataTable({
+    	ajax: {
+			url: "LoadUsergroupServlet",
+			type: "GET",
+			dataSrc: function ( json ) {
+				authoritySelector = "<select id='authoritySelect' class='custom-select-sm'>";
+				var authos = json.authority;
+				$.each(authos, function (index, item) {  
+					authoritySelector += "<option value='" + item.id + "'>" + item.authorityName + "</option>";   
+				});
+				authoritySelector += "</selector>";
+				$('#editUserGroup #modalAuthoritySelect').html(authoritySelector);
+				return json.data;
+			}
+		},
+		columns: [
+					{ data: 'childRowContral'},
+		          	{ data: 'idUserLevel'},
+					{ data: 'id' },
+					{ data: 'userLevel' },
+					{ data: 'groupName' },
+					{ data: 'authorityName' },
+					{ data: 'process' }
+		],
+		columnDefs: [
+					{ targets: [ 0 ],
+	  				  className: 'details-control',
+	  				  width: "5%",
+	  				  data: null,
+	  				  defaultContent: '',
+	  				  render: function (data, type, row, meta) {
+	  					if(row.id!=0)
+                        return '<i class="text-primary align-items-end fa fa-plus-square"></i>';}},
+					{ targets: [ 1 ],
+					  visible: false,
+					  name: "usergroup.id"},
+					{ targets: [ 2 ],
+					  visible: false,
+					  name: "usergroup.id"},
+					{ targets: [ 3 ],
+					  visible: false,
+					  name: "userlevel.name"},
+					{ targets: [ 4 ],
+					  visible: true,
+					  width: "65%",
+					  name: "usergroup.groupName"},
+					{ targets: [ 5 ],
+					  visible: false,
+					  name: "authority.authorityName"},
+					{ targets: [ 6 ],
+					  visible: true,
+					  data: null,
+					  defaultContent: '',
+					  render: function (data, type, row, meta) {
+		  				if(row.id!=0)
+	                    return '<li class="fa fa-edit fa-lg" name="btnEditGroup"></li>';}}
+		],
+		order: [[ 1, 'desc' ]],
+		ordering: false,
+		select: false,
+		displayLength: -1,
+		dom: '<"row"<"col-sm-12 col-md-6"B><"col-sm-12 col-md-6"f>>tr<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+		buttons: [
+					{ extend: 'excelHtml5',
+					  title: 'authority_list',
+					  className: "btn-outline-secondary btn-sm"},
+					{ className: "btn-outline-secondary btn-sm",
+					  text: '<span class="fa fa-refresh"></span>Refresh',
+					  action: function ( e, dt, type, config ) {
+						  table.ajax.reload(null, false).draw();
+          		    }}
+		],
+		drawCallback: function ( settings ) {
+            var api = this.api();
+            var rows = api.rows( {page:'current'} ).nodes();
+            var rowData = api.rows( {page:'current'} ).data().toArray();
+            var last=null;
+ 
+            api.column(3, {page:'current'} ).data().each( function ( group, i ) {
+                if ( last !== group ) {
+                    $(rows).eq( i ).before(
+                        "<tr class='group table-primary'><td>"+group + "<td value='" + rowData[i].idUserLevel + "'></td>"
+                        +"</td><td><li class='fa fa-edit fa-lg' name='btnEditLevel'></li></td></tr>"
+                    );
+ 
+                    last = group;
+                }
+            });
+        }
+    });
+    $('#userGroupList_wrapper button').removeClass("btn-secondary");
+ 	// Add event listener for opening and closing details
+    $('#userGroupList tbody').on('click', 'td.details-control', function(){
+        var tr = $(this).closest('tr');
+        var tdi = tr.find("i.fa");
+        var row = table.row( tr );
+ 
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+            tdi.first().removeClass('fa-minus-square');
+            tdi.first().addClass('fa-plus-square');
+        }
+        else {
+            // Open this row
+            row.child( format(row.data()) ).show();
+            tr.addClass('shown');
+            tdi.first().removeClass('fa-plus-square');
+            tdi.first().addClass('fa-minus-square');
+        }
+    });
+    $('#userGroupList tbody').on('click', 'li[name="btnEditLevel"]', function(){
+    	table.state.save();
+    	var tr = $(this).closest('tr');
+    	startEditUserLevel(tr, table)
+    });
+    $('#userGroupList tbody').on('click', 'li[name="btnEditGroup"]', function(){
+    	table.state.save();
+    	var tr = $(this).closest('tr');
+    	startEditUserGroup(tr,table);
+    });
+    $('#userGroupList tbody').on('click', 'li[name="btnDeleteAuthority"]', function(){
+    	table.state.save();
+    	var tr = $(this).closest('tr');
+    	deleteAuthority(tr, table);
+    });
+    $('#editUserGroup #btnAddAuthority').click(function(){
+    	var authoId = $('#editUserGroup #authoritySelect').val();
+    	var authoName = $('#editUserGroup option[value="'+authoId+'"]').text();
+    	var newAutho = "<div value='" + authoId + "'>" + authoName 
+				+ "<li class='fa fa-trash-o fa-lg text-danger' name='deleteAuthority'></li></div>";
+    	$('#editUserGroup #modalNewAuthorityList').append($(newAutho));
+    });
+    $('#editUserGroup').on('click','li[name="deleteAuthority"]',function(){
+    	$(this).closest('div').remove();
+    });
+    $('#editUserLevel #btnEditUserLevel').click(function(){
+    	editUserLevel(table);
+    });
+    $('#editUserGroup #btnEditUserGroup').click(function(){
+    	editUserGroup(table);
+    });
+    $('#editUserGroup #btnDeleteUserGroup').click(function(){
+    	deleteUserGroup(table);
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+firstName,lastName,PAWSID,Department,title,idUserGroup,Email
+Jully,Linn,jlinn3,jlinn3@lsu.edu,PDC,Landscape Service Manager,Utility System Manager
+Nosa,Kaft,nkaft2,nkaft2@lsu.edu,Computing Center,LONI Manager,IT Manager
+Ann,Martin,amarti7,amarti7@lsu.edu,Geography,Building Coordinator,Building Service Manager

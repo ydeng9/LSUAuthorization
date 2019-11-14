@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Request</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="./css/Common.css" rel="stylesheet">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+	<script type="text/javascript" src="./js/frame.js"></script>
+	<script type="text/javascript" src="./js/userrequest.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</head>
+<body>
+	<div class='container-fluid h-100 m-0 p-0'>
+	<div id='contentDiv' class='row h-100'>
+	<div class='col-2 ml-0 p-0 h-100 align-items-start'>
+	<nav id='menu' class="navbar navbar-light h-100 p-0 align-items-start">
+	<ul class='navbar-nav flex-column nav-pills accordion w-100 m-0' id="accordionSidebar">
+	</ul>
+	</nav>
+	</div>
+	<script>
+	loadNav($('#accordionSidebar'), "request");
+	</script>
+	<div class='h-100 col-10'>
+		<form id='formRequests'>
+		<p class="text-primary lead">Request for:</p>
+		<p class='text-danger' id='warn1' style='display:none;'>user not found, please fill the personal information</p>
+			<div class='form-row'>		
+				<input type='text' name='forWhom' class='form-control col-sm-4' placeholder='PAWID' required='required'> 
+				<input type='email' name='email' class='form-control col-sm-4' placeholder='Email' required='required'><br>
+			</div>
+			<div class='form-row'>
+				<input type='text' name='firstname' class='form-control col-sm-4' placeholder='firs tname' required='required'> 
+				<input type="text" name='lastname' class='form-control col-sm-4' placeholder='last name' required='required'>
+			</div> 
+			
+			<div id='requestsDiv'></div>	
+    		
+		</form>
+	</div>
+	</div>
+</div>
+<script>
+	$(document).ready(function(){
+		var url="LoadRequestsServlet";
+		$.post(
+			url,
+            function(data) { 
+            	//alert(data);
+            	loadAuthorities($('#requestsDiv'),data);
+     	});
+	});
+	
+</script>
+</body>
+</html>

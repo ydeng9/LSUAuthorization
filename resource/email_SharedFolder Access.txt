@@ -1,0 +1,2 @@
+Steps to Get access of Shared Folder
+<p>Please follow the direction:</p><ol><li>Log in Workday using your mylsu account and password;</li><li>Create a work order, indicating the accurate url of the shared folder you want to access;</li><li>Submit the work order. It usually take 1 to 3 business day to process.</li></ol>

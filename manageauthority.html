@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Manage Authority</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+	<link href="./dataTables/css/dataTables.bootstrap4.css" rel="stylesheet">
+	<link href="./dataTables/css/select.bootstrap4.css" rel="stylesheet">
+	<link href="./dataTables/css/buttons.bootstrap4.min.css" rel="stylesheet">
+	<link href="./css/Common.css" rel="stylesheet">
+	
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery.session@1.0.0/jquery.session.min.js"></script>
+	<script type="text/javascript" src="./js/frame.js"></script>
+	<script type="text/javascript" src="./js/manageautho.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	<script src="https://cdn.ckeditor.com/ckeditor5/12.3.0/classic/ckeditor.js"></script>
+
+	<script type="text/javascript" src="./dataTables/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" src="./dataTables/js/dataTables.bootstrap4.js"></script>
+	
+	<script type="text/javascript" src="./dataTables/js/dataTables.buttons.min.js"></script>
+	<script type="text/javascript" src="./dataTables/js/buttons.bootstrap4.min.js"></script>
+	<script type="text/javascript" src="./dataTables/js/buttons.colVis.min.js"></script>
+	<script type="text/javascript" src="./dataTables/js/dataTables.select.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+</head>
+<body>
+	<div class='container-fluid h-100 m-0 p-0'>
+	<div id='contentDiv' class='row h-100'>
+	<div class='col-2 ml-0 p-0 h-100 align-items-start'>
+	<nav id='menu' class="navbar navbar-light h-100 p-0 align-items-start">
+	<ul class='navbar-nav flex-column nav-pills accordion w-100 m-0' id="accordionSidebar">
+	</ul>
+	</nav>
+	</div>
+	<script>
+	loadNav($('#accordionSidebar'), "ManageAuthority");
+	</script>
+		<div class='col-10'>
+		<form id='formAuthority' role='form'>
+			<table id='AuthorityList' class="table m-4">
+			<thead>
+    		<tr>
+    			<th></th>
+    			<th></th>
+        		<th>Authority Name</th>
+        		<th>Description</th>
+        		<th>User Action</th>
+        		<th>Resource</th>
+        		<th>Email content</th>
+        		<th></th>
+    		</tr>
+    		</thead>
+    		<tbody id="loadtb">
+    		</tbody>
+			</table>
+		</form>
+		<div class='modal fade' id='modalAuthority' tabindex='-1' role='dialog'>
+  			<div class='modal-dialog mw-100 w-75' role='document'>
+    			<div class='modal-content'>
+      			<div class='modal-header'>
+        			<h5 class='modal-title'></h5>
+       				<button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+          				<span aria-hidden="true">&times;</span>
+        			</button>
+      			</div>
+      			<div class='modal-body'>
+        		<form id='formEditAuthority'>
+        			<input type='text' name='idAuthority' class='form-control col-sm-4' required='required' style='display:none;'>
+      				<div class='form-group mb-2'>
+      					<label>Authority Name: </label>
+						<input type='text' name='authorityName' class='form-control col-sm-4' required='required'> 
+					</div>
+      				<div class='form-group mb-2'>
+      					<label>Authority detail: </label>
+						<input type='text' name='info' class='form-control col-sm-4' required='required'> 
+					</div>
+					<label>Action: </label>
+      				<div class='form-row mb-2' id='actionSelect'>
+					</div>
+      				<div class='form-group mb-2' id='divResource' style='display:none;'>
+      				<label>Resource: </label>
+						<div id='divResourceList'></div>
+						<div class='input-group w-75'>
+  							<div class='custom-file'>
+    							<input type='file' class='custom-file-input' id='inputGroupFile' name='uploadResource' multiple>
+    							<label class='custom-file-label' for='inputGroupFile'>Choose file</label>
+  							</div>
+  							<div class='input-group-append'>
+    							<a class='btn btn-outline-secondary' href='#' id='uploadFile'>upload</a>
+  							</div>
+						</div>
+					</div>
+					<div id='divEmailEditor' style='display:none;'>
+						<label>Email Subject:</label>
+						<input type='text' name='emailSubject' class='form-control col-sm-6'>
+						<label>Email Content:</label>
+						<textarea class='form-control' rows='10' id='area1'></textarea>
+					</div>
+        		</form>
+      			</div>
+      			<div class='modal-footer'>
+        			<button id='btncancel' type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
+      				
+      			</div>
+				</div>
+			</div>
+		</div>
+		<div class='modal fade' id='modalConfirm' tabindex='-1' role='dialog'>
+  			<div class='modal-dialog mw-100 w-75' role='document'>
+    			<div class='modal-content'>
+      			<div class='modal-header'>
+        			<h5 class='modal-title'></h5>
+       				<button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+          				<span aria-hidden="true">&times;</span>
+        			</button>
+      			</div>
+      			<div class='modal-body'>
+        		<h5>Delete this authority?</h5>
+      			</div>
+      			<div class='modal-footer'>
+        			<button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancel</button>
+      				<button id='btnConfirmDelete' type='button' class='btn btn-secondary' data-dismiss='modal'>Delete</button>
+      			</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	</div>
+	<script>
+	$(document).ready(function(){
+		var cols = ['checkbox','authorityName','info','userAction','resource'];
+		var actionSelector = "";
+		let editor;
+		ClassicEditor
+	    .create( document.querySelector( '#area1' ), {
+	        toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList' ]
+	    } )
+	    .then( newEditor => {
+    		editor = newEditor;
+		} )
+	    .catch( error => {
+	        console.log( error );
+	    } );
+		$('#divEmailEditor').hide();
+		var table;
+		table = $('#AuthorityList').DataTable({
+			ajax: {
+				url: "LoadAuthorityServlet",
+				type: "GET",
+				dataSrc: function ( json ) {
+					actionSelector = "";
+					var action = json.action;
+					$.each(action, function (index, item) {  
+						actionSelector += "<option value='" + item.id + "'>" + item.description + "</option>";   
+					});
+					actionSelector += "</selector>"
+					return json.data;
+				}
+			},
+			columns: [
+				{ data: 'checkbox'},
+				{ data: 'id' },
+				{ data: 'authorityName' },
+				{ data: 'info' },
+				{ data: 'userAction' },
+				{ data: 'resource' },
+				{ data: 'emailContent' },
+				{ data: 'idUserAction' }
+			],
+			columnDefs: [ 
+				{ targets: [ 0 ],
+				  data: null,
+				  defaultContent: '',
+				  orderable: false,
+				  className: 'select-checkbox'},
+				{ targets: [ 1 ],
+				  visible: false,
+				  name: "authority.idAuthority"},
+				{ targets: [ 5 ],
+				  name: "authority.resource",
+				  "render": function ( data, type, row, meta ) {
+					var files = data.split(";");
+					var strResource = "";
+					for(var j=0; j<files.length;j++){
+						if(files[j].length > 0){
+							if(j>0) strResource+="<br>";
+							strResource += "<a href='ShowResourceServlet?file="+ files[j] + "' target='_blank'>" + files[j] + "</a>";
+						}
+					}
+					return strResource;}},
+				{ targets: [ 6 ],
+				  name: "authority.resource",
+				  "render": function ( data, type, row, meta ) {
+					var strResource = "<a href='ShowResourceServlet?file="+ data + "' target='_blank'>" + data + "</a>";
+					return strResource;}},
+				{ targets: [ 7 ],
+				  visible: false,
+				  //data: null,
+				  //defaultContent: '',
+				  orderable: false}
+			],
+			select: true,
+			lengthMenu: [
+				[ 5, 10, 20, -1],
+				[ '5 rows', '10 rows', '20 rows', 'Show all' ]
+			],
+			dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>Btr<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+			buttons: [
+				{ extend: 'excelHtml5',
+				  title: 'authority_list',
+				  className: "btn-outline-secondary btn-sm"},
+				{ extend: 'colvis',
+				  className: "btn-outline-secondary btn-sm"}
+			],
+			initComplete: function(settings, json) {
+				var api = this.api();
+				api.buttons().container().appendTo( '#userList_wrapper .col-md-6:eq(0)' );
+				new $.fn.dataTable.Buttons( api, {
+					buttons: [
+						{
+							text: '<span class="fa fa-plus fa-lg">Add',
+							className: 'btn-outline-dark btn-sm',
+							attr: {id: 'btnAdd'},
+							action: function ( e, dt, node, conf ) {
+								addOneAuthority(actionSelector);
+		 					}
+						},
+						{
+							text: '<span class="fa fa-trash fa-lg mr-1">Delete',
+							className: 'btn-outline-dark btn-sm',
+							attr: {id: 'btnDelete'},
+							action: function ( e, dt, node, conf ) {
+								$('#modalConfirm').modal('show');
+								
+		 					}
+						},
+						{
+							text: '<span class="fa fa-edit fa-lg mr-1"></span>Edit',
+							className: "btn-outline-dark btn-sm",
+							attr: {id: 'btnEdit'},
+							action: function ( e, dt, node, conf ) {
+								editAuthority(table, cols, actionSelector, editor);
+							}
+						}
+					]
+				});
+				api.buttons(1, null).container().appendTo( api.table().container());
+				$('button').removeClass("btn-secondary");
+			}
+		});
+		$('button').removeClass("btn-secondary");
+		$('#uploadFile').click(function(){
+			//alert($('#formAuthority')[0]);
+			var f1 = $('#formAuthority');
+			uploadResourceFile(f1);
+		});
+		$('#modalAuthority').on('hide.bs.modal',function(e){ 
+			cancelEditAuthority(editor); 
+		});
+		$('#modalAuthority').on('click','a[name="deleteResource"]',function(){
+			var div = $(this).closest('div');
+			deleteResource(div);
+		});
+		$('#modalAuthority').on('click','#btnUpdate',function(){
+			makeEdit(table, editor);
+		});
+		$('#modalAuthority').on('click','#btnAdd1',function(){
+			makeAdd(table);
+		});
+		$('#modalConfirm').on('click','#btnConfirmDelete',function(){
+			deleteAuthority(table);
+		});
+	});
+	$('.custom-file-input').on('change',function(){
+		var files = $('#inputGroupFile').prop("files");
+		
+		var names = $.map(files,function(val){ 
+			return val.name; 
+		});
+		var fileNames = "";
+		for(var i = 0; i < names.length; i++){
+			fileNames += names[i].split('\\').pop() + ";  ";
+		}
+		$(this).next('.custom-file-label').addClass("selected").html(fileNames); 
+	});
+	//Tip: For <input type="file">: to select multiple files, hold down the CTRL or SHIFT key while selecting.
+	
+	</script>
+</body>
+</html>
